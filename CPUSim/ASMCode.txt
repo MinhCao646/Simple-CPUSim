@@ -1,0 +1,141 @@
+//0:counterY
+//1:counterX
+//2:limitY
+//3:limitX
+//4:color
+//16:limitZeroY
+//17:limitZeroX
+//18:limitMoveY
+//19:limitMoveX
+.data
+ldtm 0 0    
+ldtm 1 0
+ldtm 2 10
+ldtm 3 20
+ldtm 16 0
+ldtm 17 0
+ldtm 18 9
+ldtm 19 19
+ldtm 4 7
+
+//dataForCube
+//y
+ldtm 9 1
+//x
+ldtm 10 5
+//cubeColor
+ldtm 6 10
+
+//movingSpeed
+ldtm 7 1
+
+//inputhandling
+ldtm 8 0
+//keyW
+ldtm 12 119
+//keyS
+ldtm 13 115
+//keyA
+ldtm 14 97
+//keyD
+ldtm 15 100
+
+.start
+cls
+ldtm 8 0
+cmp 0 2
+brh .loopInX 4
+brh .outputAssignedColor 1
+
+.mainLoop
+input 8
+call .moveHorizontal
+call .moveVertical
+jmp .start
+
+.loopInY
+inc 0
+ldtm 1 0
+cmp 0 2
+brh .loopInX 4
+brh .outputAssignedColor 1
+
+.loopInX
+cmp 1 3
+brh .assignBitColor 4
+
+.firstcomp
+cmp 1 10
+callc .drawCube 1
+ret
+
+.drawCube
+scr 0 1 6
+ret
+
+.assignBitColor
+scr 0 1 4
+cmp 9 0
+callc .firstcomp 1
+inc 1
+cmp 1 3 
+brh .loopInX 4
+brh .loopInY 1
+
+.outputAssignedColor
+ldtm 0 0
+dscr
+dly 500
+jmp .mainLoop
+
+.moveHorizontal
+cmp 8 12
+callc .moveUp 1
+cmp 8 13
+callc .moveDown 1
+ret
+
+.moveVertical
+cmp 8 14
+callc .moveLeft 1
+cmp 8 15
+callc .moveRight 1
+ret
+
+.moveUp
+cmp 9 16
+brh .noMove 1
+sub 9 7 9
+ret
+
+.moveDown
+cmp 9 18
+brh .moveItD 4
+brh .noMove 1
+ret
+
+.moveLeft
+cmp 10 17
+brh .noMove 1
+sub 10 7 10
+ret
+
+.moveRight
+cmp 10 19
+brh .moveItR 4
+brh .noMove 1
+ret
+
+.moveItD
+add 9 7 9
+ret
+
+.moveItR
+add 10 7 10
+ret
+
+.noMove
+ret
+
+.end
+hlt
