@@ -1,5 +1,5 @@
 # Simple-CPUSim
-a lil simple simulation show how a CPU work
+a lil simple simulation show how a CPU work, but in a way like interpreter was.
 
 This project is open-source and also it's a place so you can play with it or make your own opcode as well if you interested it. This project is my custom CPU with my own custom ASM (Assembly) idea.
 And the opcode is simple so you can code yourself something you like in the text file (.txt) or even upgrade it if it isn't quite right, i also appreciate if you want to upgrade it a bit tho.
