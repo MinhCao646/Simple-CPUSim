@@ -268,12 +268,6 @@ class CPU {
             }
             ClearScreen();
         }
-        else if (op == "RSCR"){ ///Output data at address r0
-            OutputData(instr.r0);
-        }
-        else if (op == "SOD"){ ///Output stack data
-            OutputStack();
-        }
         else if (op == "INPUT"){ ///Input data to memory at address r0
             if(kbhit()){
                 char c = getch();
@@ -287,18 +281,6 @@ class CPU {
             throw runtime_error("Unknown operator: " + op);
         }
     };
-
-    void OutputData (int addr)
-    {
-        cout << "Output data: " << GetMemoryData (addr) << endl;
-    };
-
-    void OutputStack (){
-        for(int i = 0; i < 100; ++i){
-            cout << StackMem[i] << " ";
-            if (i == 99) cout << endl;
-        }
-    }
 
     void runCPU ()
     {
@@ -461,10 +443,6 @@ class GetCodeFromFile{
 };
 
 int main() {
-    ///If you want to remember: flag code is: z:10, o + z: 12, o: 14
-    ///STRR: acc"r0" = calc; STRTM: mem"r0" = acc"r1"; LDTM: mem"r0" = "r1"; LDTA: acc"r0" = mem"r1"; ADD: calc = acc"r0" + acc"r1"; SUB: calc = acc"r0" - acc"r1"; MUL: calc = acc"r0" * acc"r1";
-    ///DIV: calc = acc"r0" / acc"r1"; JMP: pc = "r0"; BRH: flag = "r1"? pc = "r0"; CALL: push, pc = "r0"; RET: pop; HLT: halt; RSCR: output"r0"; SOD: ouput stack data; INPUT: cin >> mem"r0";
-    ///AND: calc = acc"r0" & acc"r1"; OR: calc = acc"r0" | acc"r1"; XOR: calc = acc"r0" ^ acc"r1"; NOT: calc = ~acc"r0"; SHL: calc = acc"r0" << "r1"; SHR: calc = acc"r0" >> "r1"; INC: mem"r0"++; DEC: mem"r0"--;
 
     try
     {
