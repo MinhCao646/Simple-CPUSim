@@ -27,9 +27,8 @@ enum FlagCode {
 
 struct ScreenPixel
 {
-    int x;
-    int y;
-    int color;
+    char symbol = '#';
+    int color = 1;
 };
 
 class BitMaskFlag{
@@ -61,7 +60,7 @@ class CPU {
         BitMaskFlag Flag;
         vector<int> memory;
         vector<Instruction> prog;
-        vector<vector<int>> ScreenDisplay;
+        vector<vector<ScreenPixel>> Display;
         int programCounter;
         bool running;
         int StackMem[100] = {0};
@@ -69,6 +68,28 @@ class CPU {
         void SetColor(int textColor, int bgColor){
             HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
             SetConsoleTextAttribute(hConsole, ((bgColor << 4) | textColor));
+        }
+
+        void OutputFrameBuffer(int &width, int &height, vector<vector<ScreenPixel>> &Displaydata){
+            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+            CHAR_INFO charBuffer[width * height];
+
+            for(int y = 0; y < height; ++y){
+                for (int x = 0; x < width; ++x)
+                {
+                    int index = y * width + x;
+                    charBuffer[index].Char.AsciiChar = Displaydata[y][x].symbol;
+                    charBuffer[index].Attributes = Displaydata[y][x].color;
+                }
+            }
+
+            COORD bufferSize = {(SHORT)width, (SHORT)height};
+            COORD bufferCoord = {0, 0};
+            SMALL_RECT writeRegion = {10, 5, static_cast<SHORT>(10 + width - 1), static_cast<SHORT>(5 + height - 1)};
+
+            if(!WriteConsoleOutput(hConsole, charBuffer, bufferSize, bufferCoord, &writeRegion)){
+                cerr << "Error: WriteConsoleOutputA failed. \n";
+            }
         }
 
         void ClearScreen(){
@@ -106,7 +127,7 @@ class CPU {
         }
 
     public:
-    CPU(size_t memorySize = 256) : memory(memorySize, 0), programCounter(0), running(true), ScreenDisplay(10, vector<int>(20, 0)) {}
+    CPU(size_t memorySize = 256) : memory(memorySize, 0), programCounter(0), running(true), Display(10, vector<ScreenPixel>(20)) {}
 
     void LoadProgram (const vector<Instruction>&program)
     {
@@ -243,30 +264,24 @@ class CPU {
             running = false;
         }
         else if (op == "SCR"){
-            if (memory[instr.r0] < 0 || memory[instr.r0] >= (int)ScreenDisplay.size() || memory[instr.r1] < 0 || memory[instr.r1] >= (int)ScreenDisplay[0].size()){
+            if (memory[instr.r0] < 0 || memory[instr.r0] >= (int)Display.size() || memory[instr.r1] < 0 || memory[instr.r1] >= (int)Display[0].size()){
                 throw runtime_error("Invalid screen coordinates");
             }
             int y = memory[instr.r0];
             int x = memory[instr.r1];
-            ScreenDisplay[y][x] = memory[instr.r2];
+            Display[y][x].color = memory[instr.r2];
         }
         else if (op == "DSCR"){ ///Display screen data
-            for (const auto& row : ScreenDisplay){
-                for (const auto& pixel : row){
-                    SetColor(0, pixel);
-                    cout << "  ";
-                    SetColor(7, 0); ///Reset to default color
-                }
-                cout << endl;
-            }
+            int width = Display[0].size();
+            int height = Display.size();
+            OutputFrameBuffer(width, height, Display);
         }
         else if (op == "CLS"){ ///Clear screen data
-            for (auto& row : ScreenDisplay){
+            for (auto& row : Display){
                 for (auto& pixel : row){
-                    pixel = 0; ///Reset to default color
+                    pixel.color = 0; ///Reset to default color
                 }
             }
-            ClearScreen();
         }
         else if (op == "INPUT"){ ///Input data to memory at address r0
             if(kbhit()){
@@ -443,6 +458,10 @@ class GetCodeFromFile{
 };
 
 int main() {
+    ///If you want to remember: flag code is: z:10, o + z: 12, o: 14
+    ///STRR: acc"r0" = calc; STRTM: mem"r0" = acc"r1"; LDTM: mem"r0" = "r1"; LDTA: acc"r0" = mem"r1"; ADD: calc = acc"r0" + acc"r1"; SUB: calc = acc"r0" - acc"r1"; MUL: calc = acc"r0" * acc"r1";
+    ///DIV: calc = acc"r0" / acc"r1"; JMP: pc = "r0"; BRH: flag = "r1"? pc = "r0"; CALL: push, pc = "r0"; RET: pop; HLT: halt; RSCR: output"r0"; SOD: ouput stack data; INPUT: cin >> mem"r0";
+    ///AND: calc = acc"r0" & acc"r1"; OR: calc = acc"r0" | acc"r1"; XOR: calc = acc"r0" ^ acc"r1"; NOT: calc = ~acc"r0"; SHL: calc = acc"r0" << "r1"; SHR: calc = acc"r0" >> "r1"; INC: mem"r0"++; DEC: mem"r0"--;
 
     try
     {
