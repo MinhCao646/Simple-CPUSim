@@ -60,6 +60,7 @@ class CPU {
         BitMaskFlag Flag;
         vector<int> memory;
         vector<Instruction> prog;
+        int width, height;
         vector<vector<ScreenPixel>> Display;
         int programCounter;
         bool running;
@@ -127,7 +128,7 @@ class CPU {
         }
 
     public:
-    CPU(size_t memorySize = 256) : memory(memorySize, 0), programCounter(0), running(true), Display(10, vector<ScreenPixel>(20)) {}
+    CPU(size_t memorySize = 256) : memory(memorySize, 0), programCounter(0), running(true), height(10), width(20) {Display.assign(height, vector<ScreenPixel>(width));}
 
     void LoadProgram (const vector<Instruction>&program)
     {
@@ -263,10 +264,10 @@ class CPU {
         else if (op == "HLT"){ ///Halt the CPU
             running = false;
         }
-        else if (op == "GSCRY"){ ///Get screen height (y-axis) to what memory address at r0
+        else if (op == "GSCRY"){ ///Get screen height (y-axis)
             memory[instr.r0] = height;
         }
-        else if (op == "GSCRX"){ //Get screen width (x-axis) to what memory address at r0
+        else if (op == "GSCRX"){ //Get screen width (x-axis)
             memory[instr.r0] = width;
         }
         else if (op == "SCR"){
@@ -464,11 +465,6 @@ class GetCodeFromFile{
 };
 
 int main() {
-    ///If you want to remember: flag code is: z:10, o + z: 12, o: 14
-    ///STRR: acc"r0" = calc; STRTM: mem"r0" = acc"r1"; LDTM: mem"r0" = "r1"; LDTA: acc"r0" = mem"r1"; ADD: calc = acc"r0" + acc"r1"; SUB: calc = acc"r0" - acc"r1"; MUL: calc = acc"r0" * acc"r1";
-    ///DIV: calc = acc"r0" / acc"r1"; JMP: pc = "r0"; BRH: flag = "r1"? pc = "r0"; CALL: push, pc = "r0"; RET: pop; HLT: halt; RSCR: output"r0"; SOD: ouput stack data; INPUT: cin >> mem"r0";
-    ///AND: calc = acc"r0" & acc"r1"; OR: calc = acc"r0" | acc"r1"; XOR: calc = acc"r0" ^ acc"r1"; NOT: calc = ~acc"r0"; SHL: calc = acc"r0" << "r1"; SHR: calc = acc"r0" >> "r1"; INC: mem"r0"++; DEC: mem"r0"--;
-
     try
     {
         GetCodeFromFile codeReader;
