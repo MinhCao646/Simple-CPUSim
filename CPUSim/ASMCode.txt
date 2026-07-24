@@ -8,15 +8,24 @@
 //18:limitMoveY
 //19:limitMoveX
 .data
-ldtm 0 0    
+ldtm 0 0
 ldtm 1 0
-ldtm 2 10
-ldtm 3 20
+ldtm 2 0
+ldtm 3 0
+gscry 2
+gscrx 3
 ldtm 16 0
 ldtm 17 0
-ldtm 18 9
-ldtm 19 19
+ldtm 18 0
+ldtm 19 0
 ldtm 4 7
+
+//Get_Value
+mov 18 2
+mov 19 3
+//DecreaseToMatchScreenLimit
+dec 18
+dec 19
 
 //dataForCube
 //y
@@ -24,7 +33,7 @@ ldtm 9 1
 //x
 ldtm 10 5
 //cubeColor
-ldtm 6 10
+ldtm 6 13
 
 //movingSpeed
 ldtm 7 1
@@ -41,7 +50,6 @@ ldtm 14 97
 ldtm 15 100
 
 .start
-cls
 ldtm 8 0
 cmp 0 2
 brh .loopInX 4
@@ -85,7 +93,7 @@ brh .loopInY 1
 .outputAssignedColor
 ldtm 0 0
 dscr
-dly 500
+dly 16
 jmp .mainLoop
 
 .moveHorizontal
