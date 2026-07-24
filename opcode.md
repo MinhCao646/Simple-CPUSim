@@ -37,6 +37,8 @@ Flag code as bit: 0001 (1) equal, 0010 (2) greater, 0100 (4) less, 0011 (3) grea
 
 I/O<br>
 INPUT: As it name it is input but it handle by reading the keyboard input and store the character in the ASCII number to r0 address.<br>
+GSCRY: An opcode to get screen height and store it to memory address using r0.<br>
+GSCRX: An opcode to get screen width and store it to memory address using r0. <br>
 SCR: Assign value of color by r2 memory address at r0 address as y axis and r1 address as x axis to virtual VRAM.<br>
 DSCR: Flush frame into the buffer and output with character.<br>
 CLS: Clear screen value and clear the output console.<br>
