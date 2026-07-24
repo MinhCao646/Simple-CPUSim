@@ -263,6 +263,12 @@ class CPU {
         else if (op == "HLT"){ ///Halt the CPU
             running = false;
         }
+        else if (op == "GSCRY"){ ///Get screen height (y-axis) to what memory address at r0
+            memory[instr.r0] = height;
+        }
+        else if (op == "GSCRX"){ //Get screen width (x-axis) to what memory address at r0
+            memory[instr.r0] = width;
+        }
         else if (op == "SCR"){
             if (memory[instr.r0] < 0 || memory[instr.r0] >= (int)Display.size() || memory[instr.r1] < 0 || memory[instr.r1] >= (int)Display[0].size()){
                 throw runtime_error("Invalid screen coordinates");
