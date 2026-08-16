@@ -118,11 +118,14 @@ void CPU::DecodeAndExecute(const Instruction &instr){
         }
         int y = memory[instr.r0];
         int x = memory[instr.r1];
-        char symbol = '#';
-        rend.AssignPixel(&y, &x, symbol, memory[instr.r2]);
+        //char symbol = '#';
+        //rend.AssignPixel(&y, &x, symbol, memory[instr.r2]);
+        wchar_t symbol = L'█';
+        rend.AssignPixelForUnicode(&y, &x, symbol, memory[instr.r2]);
     }
     else if (op == "DSCR"){ ///Display screen data
-        rend.OutputFrameBuffer();
+        //rend.OutputFrameBuffer();
+        rend.OutputFrameBufferUnicode();
     }
     else if (op == "CLS"){ ///Clear screen data
         rend.ResetPixelValue();
