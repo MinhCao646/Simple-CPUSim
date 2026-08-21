@@ -4,7 +4,7 @@
 int main(){
     try
     {
-        CPU cpu0;
+        CPU cpu0(256, 10, 20);
         Assembler build;
 
         auto program = build.GetFile();
