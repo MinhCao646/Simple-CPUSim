@@ -11,10 +11,11 @@ opcode r0 r1 r2
 <br>or<br>
 opcode operand0 operand1 operand2
 
-Features:<br>
-INPUT: handle input from keyboard and assign the character by convert into ASCII number.<br>
-SCR: Assign color value so you can actually "draw" a "pixel" on console.<br>
-DSCR: Display/output the assigned value on console.<br>
+Update log:<br>
+Date/time: 08/26/2026 22:17<br>
+Update list:<br>
+- Added a debug renderer to render things like: memory block, PC (Program counter).<br>
+- Added a display to show what is the current instruction that the CPU at.<br>
 
 I hope you enjoy this project alone.
 
