@@ -1,0 +1,15 @@
+ldtm 0 35
+ldtm 1 48
+ldtm 2 0
+ldtm 3 57
+mov 2 1
+
+.mainLoop
+cmp 2 3
+callc .resetNumber 1
+inc 2
+jmp .mainLoop
+
+.resetNumber
+mov 2 1
+ret
